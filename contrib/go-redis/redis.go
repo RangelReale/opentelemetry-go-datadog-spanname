@@ -6,7 +6,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/RangelReale/opentelemetry-go-datadog-spanname/ddtrace"
+	ddspanname "github.com/RangelReale/opentelemetry-go-datadog-spanname"
 	"go.opentelemetry.io/otel/trace"
 )
 
@@ -17,9 +17,9 @@ func New(opts ...Option) trace.TracerProvider {
 	for _, opt := range opts {
 		opt(&optns)
 	}
-	return ddtrace.NewTracerProvider(optns.operationName,
-		ddtrace.WithTracerProvider(optns.tracerProvider),
-		ddtrace.WithSpanNameFormatter(func(ctx context.Context, operationName string, spanName string) string {
+	return ddspanname.NewTracerProvider(optns.operationName,
+		ddspanname.WithTracerProvider(optns.tracerProvider),
+		ddspanname.WithSpanNameFormatter(func(ctx context.Context, operationName string, spanName string) string {
 			// add a "redis." prefix to span names when not available
 			if strings.HasPrefix(spanName, "redis.") {
 				return spanName

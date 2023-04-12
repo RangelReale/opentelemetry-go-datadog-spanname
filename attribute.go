@@ -1,4 +1,4 @@
-package ddtrace
+package ddspanname
 
 import "go.opentelemetry.io/otel/attribute"
 

@@ -3,7 +3,7 @@ package http
 import (
 	"net/http"
 
-	"github.com/RangelReale/opentelemetry-go-datadog-spanname/ddtrace"
+	ddspanname "github.com/RangelReale/opentelemetry-go-datadog-spanname"
 	"go.opentelemetry.io/otel/trace"
 )
 
@@ -16,8 +16,8 @@ func NewTransport(opts ...Option) trace.TracerProvider {
 	for _, opt := range opts {
 		opt(&optns)
 	}
-	return ddtrace.NewTracerProvider(optns.operationName,
-		ddtrace.WithTracerProvider(optns.tracerProvider))
+	return ddspanname.NewTracerProvider(optns.operationName,
+		ddspanname.WithTracerProvider(optns.tracerProvider))
 }
 
 // TransportSpanNameFormatter should be used with otelhttp.WithSpanNameFormatter because

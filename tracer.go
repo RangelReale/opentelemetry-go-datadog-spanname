@@ -1,4 +1,4 @@
-package ddtrace
+package ddspanname
 
 import (
 	"context"
