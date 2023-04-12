@@ -39,7 +39,7 @@ func main() {
             otelhttp.WithTracerProvider(ddspanname.NewTracerProvider("http.request")),
         ),
     }
-	// ...
+    // ...
 }
 ```
 
