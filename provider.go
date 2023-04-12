@@ -12,6 +12,9 @@ type tracerProvider struct {
 	spanNameFormatter      SpanNameFormatter
 }
 
+// NewTracerProvider creates a [trace.TracerProvider] that returns a [trace.Tracer] which
+// sets the attributes "operation.name" and "resource.name", so that DataDog span names are formatted
+// correctly.
 func NewTracerProvider(operationName string, opts ...Option) trace.TracerProvider {
 	ret := &tracerProvider{
 		base:                   otel.GetTracerProvider(),
@@ -33,6 +36,7 @@ func (d *tracerProvider) Tracer(name string, options ...trace.TracerOption) trac
 
 type Option func(*tracerProvider)
 
+// WithTracerProvider sets a base [trace.TracerProvider]. If not set, the global trace provider will be used.
 func WithTracerProvider(base trace.TracerProvider) Option {
 	return func(p *tracerProvider) {
 		if base == nil {
@@ -42,12 +46,14 @@ func WithTracerProvider(base trace.TracerProvider) Option {
 	}
 }
 
+// WithOperationNameFormatter sets a function to customize the operation name.
 func WithOperationNameFormatter(operationNameFormatter OperationNameFormatter) Option {
 	return func(p *tracerProvider) {
 		p.operationNameFormatter = operationNameFormatter
 	}
 }
 
+// WithSpanNameFormatter sets a function to customize the span name.
 func WithSpanNameFormatter(spanNameFormatter SpanNameFormatter) Option {
 	return func(p *tracerProvider) {
 		p.spanNameFormatter = spanNameFormatter
