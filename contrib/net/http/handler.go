@@ -5,7 +5,7 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-// NewHandler should be used with otelhttp.NewHandler
+// NewHandler should be used with [go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp.NewHandler].
 func NewHandler(opts ...Option) trace.TracerProvider {
 	optns := options{
 		operationName: "http.request",

@@ -5,6 +5,7 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
+// New should be used with [github.com/XSAM/otelsql], but can be used with any [database/sql] instrument.
 func New(driverName string, opts ...Option) trace.TracerProvider {
 	optns := options{
 		operationName: driverName + ".query",

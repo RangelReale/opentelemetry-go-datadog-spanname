@@ -1,5 +1,3 @@
-// Package redis should be used with:
-// github.com/redis/go-redis
 package redis
 
 import (
@@ -10,6 +8,7 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
+// New should be used with [github.com/redis/go-redis/extra/redisotel/v9].
 func New(opts ...Option) trace.TracerProvider {
 	optns := options{
 		operationName: "redis.command",
