@@ -12,7 +12,7 @@ type tracerProvider struct {
 	spanNameFormatter      SpanNameFormatter
 }
 
-func NewTraceProvider(operationName string, opts ...Option) trace.TracerProvider {
+func NewTracerProvider(operationName string, opts ...Option) trace.TracerProvider {
 	ret := &tracerProvider{
 		base:                   otel.GetTracerProvider(),
 		operationName:          operationName,
@@ -35,6 +35,9 @@ type Option func(*tracerProvider)
 
 func WithTracerProvider(base trace.TracerProvider) Option {
 	return func(p *tracerProvider) {
+		if base == nil {
+			return
+		}
 		p.base = base
 	}
 }
