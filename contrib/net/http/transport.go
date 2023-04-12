@@ -5,7 +5,8 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-func NewRoundTripper(opts ...Option) trace.TracerProvider {
+// NewTransport should be used with otelhttp.NewTransport
+func NewTransport(opts ...Option) trace.TracerProvider {
 	optns := options{
 		operationName: "http.client.request",
 	}
