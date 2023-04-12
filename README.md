@@ -1,4 +1,4 @@
-# OpenTelemetry Go DataDog Span Name Formatter
+# OpenTelemetry Go DataDog Span Name Formatter [![GoDoc](https://godoc.org/github.com/RangelReale/opentelemetry-go-datadog-spanname?status.png)](https://godoc.org/github.com/RangelReale/opentelemetry-go-datadog-spanname)
 
 From:
 
