@@ -11,15 +11,39 @@ import (
 
 func TestTracer(t *testing.T) {
 	tests := []struct {
-		instrumentName        string // default is "ddspanname.instrument"
-		operationName         string // default is "ddspanname.operation"
-		spanName              string // default is "ddspanname.span"
+		instrumentName string // default is "ddspanname.instrument"
+		operationName  string // default is "ddspanname.operation"
+		spanName       string // default is "ddspanname.span"
+		options        []TracerOption
+
+		expectedSpanName      string
 		expectedOperationName string
 		expectedResourceName  string
 	}{
 		{
+			expectedSpanName:      "ddspanname.span",
 			expectedOperationName: "ddspanname.operation",
 			expectedResourceName:  "ddspanname.span",
+		},
+		{
+			options: []TracerOption{
+				WithTracerOperationNameFormatter(func(ctx context.Context, operationName string) string {
+					return operationName + "Custom"
+				}),
+			},
+			expectedSpanName:      "ddspanname.span",
+			expectedOperationName: "ddspanname.operationCustom",
+			expectedResourceName:  "ddspanname.span",
+		},
+		{
+			options: []TracerOption{
+				WithTracerSpanNameFormatter(func(ctx context.Context, operationName string, spanName string) string {
+					return spanName + "Custom"
+				}),
+			},
+			expectedSpanName:      "ddspanname.spanCustom",
+			expectedOperationName: "ddspanname.operation",
+			expectedResourceName:  "ddspanname.spanCustom",
 		},
 	}
 
@@ -38,7 +62,7 @@ func TestTracer(t *testing.T) {
 		tracerProvider := sdktrace.NewTracerProvider(sdktrace.WithSpanProcessor(sr))
 		tracer := tracerProvider.Tracer(test.instrumentName)
 
-		ddtracer := NewTracer(tracer, test.operationName)
+		ddtracer := NewTracer(tracer, test.operationName, test.options...)
 
 		_, span := ddtracer.Start(context.Background(), test.spanName)
 		span.End()
@@ -46,14 +70,8 @@ func TestTracer(t *testing.T) {
 		spans := sr.Ended()
 		require.Len(t, spans, 1)
 
-		for _, testSpan := range spans {
-			switch testSpan.Name() {
-			case test.spanName:
-				require.Contains(t, testSpan.Attributes(), DDOperationNameKey.String(test.expectedOperationName))
-				require.Contains(t, testSpan.Attributes(), DDResourceNameKey.String(test.expectedResourceName))
-			default:
-				t.Fatalf("unexpected span name %s", testSpan.Name())
-			}
-		}
+		require.Equal(t, test.expectedResourceName, spans[0].Name())
+		require.Contains(t, spans[0].Attributes(), DDOperationNameKey.String(test.expectedOperationName))
+		require.Contains(t, spans[0].Attributes(), DDResourceNameKey.String(test.expectedResourceName))
 	}
 }
