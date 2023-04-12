@@ -11,7 +11,7 @@ import (
 // Also use TransportSpanNameFormatter with [otelhttp.WithSpanNameFormatter] for a better span name.
 func NewTransport(opts ...Option) trace.TracerProvider {
 	optns := options{
-		operationName: "http.client.request",
+		operationName: "http.request",
 	}
 	for _, opt := range opts {
 		opt(&optns)
