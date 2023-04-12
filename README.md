@@ -26,7 +26,42 @@ The `contrib` directory contains implementations for common packages following t
 ## Usage
 
 ```go
+import (
+    "net/http"
 
+    ddspanname "github.com/RangelReale/opentelemetry-go-datadog-spanname"
+    "go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+)
+
+func main() {
+    client := &http.Client{
+        Transport: otelhttp.NewTransport(nil,
+            otelhttp.WithTracerProvider(ddspanname.NewTracerProvider("http.request")),
+        ),
+    }
+	// ...
+}
+```
+
+Using contrib:
+
+```go
+import (
+    "net/http"
+
+    snhttp "github.com/RangelReale/opentelemetry-go-datadog-spanname/contrib/net/http"
+    "go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+)
+
+func main() {
+    client := &http.Client{
+        Transport: otelhttp.NewTransport(nil,
+            otelhttp.WithTracerProvider(snhttp.NewTransport()),
+            otelhttp.WithSpanNameFormatter(snhttp.TransportSpanNameFormatter),
+        ),
+    }
+    // ...	
+}
 ```
 
 ## Author
